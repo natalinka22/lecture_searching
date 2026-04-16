@@ -1,5 +1,8 @@
 from pathlib import Path
 import json
+import time
+import matplotlib.pyplot as plt
+from generators import unordered_sequence
 
 def read_data(file_name, field):
     """
@@ -67,6 +70,46 @@ def binary_search(sequence, target):
     return None
 
 
+def benchmark_searches():
+    input_sizes = [100, 500, 1000, 5000, 10000]
+    repetitions = 10
+    linear_times = []
+    binary_times = []
+
+    for size in input_sizes:
+        linear_total = 0.0
+        binary_total = 0.0
+
+        for _ in range(repetitions):
+            unordered_data = unordered_sequence(size)
+            ordered_data = sorted(unordered_data)
+            target_value = unordered_data[size // 2]
+
+            start_time = time.perf_counter()
+            linear_search(unordered_data, target_value)
+            linear_total += time.perf_counter() - start_time
+
+            start_time = time.perf_counter()
+            binary_search(ordered_data, target_value)
+            binary_total += time.perf_counter() - start_time
+
+        linear_times.append(linear_total / repetitions)
+        binary_times.append(binary_total / repetitions)
+
+    plt.figure(figsize=(8, 5))
+    plt.plot(input_sizes, linear_times, marker="o", label="Linear search")
+    plt.plot(input_sizes, binary_times, marker="o", label="Binary search")
+    plt.title("Search time comparison")
+    plt.xlabel("Input size")
+    plt.ylabel("Average time (seconds)")
+    plt.legend()
+    plt.grid(True, alpha=0.3)
+    plt.tight_layout()
+    plt.savefig("task4_search_benchmark.png")
+    plt.close()
+
+    return input_sizes, linear_times, binary_times
+
 
 def main():
     sequential_data = read_data("sequential.json", "unordered_numbers")
@@ -77,6 +120,12 @@ def main():
     print(sequential_data)
     print(linear_search(sequential_data, searched_number))
     print(binary_search(ordered_data, ordered_searched_number))
+
+    sizes, linear_times, binary_times = benchmark_searches()
+    print(sizes)
+    print(linear_times)
+    print(binary_times)
+    print("task4_search_benchmark.png")
 
 
 if __name__ == "__main__":
