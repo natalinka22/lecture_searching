@@ -111,15 +111,47 @@ def benchmark_searches():
     return input_sizes, linear_times, binary_times
 
 
+def pattern_search(sequence, pattern):
+    positions = set()
+    sequence_length = len(sequence)
+    pattern_length = len(pattern)
+
+    if pattern_length == 0:
+        return positions
+
+    start = 0
+
+    while start <= sequence_length - pattern_length:
+        pattern_index = 0
+        match = True
+
+        while pattern_index < pattern_length:
+            if sequence[start + pattern_index] != pattern[pattern_index]:
+                match = False
+                break
+
+            pattern_index += 1
+
+        if match:
+            positions.add(start)
+
+        start += 1
+
+    return positions
+
+
 def main():
     sequential_data = read_data("sequential.json", "unordered_numbers")
     ordered_data = read_data("sequential.json", "ordered_numbers")
+    dna_sequence = read_data("sequential.json", "dna_sequence")
     searched_number = 5
     ordered_searched_number = 14
+    searched_pattern = "ATA"
 
     print(sequential_data)
     print(linear_search(sequential_data, searched_number))
     print(binary_search(ordered_data, ordered_searched_number))
+    print(pattern_search(dna_sequence, searched_pattern))
 
     sizes, linear_times, binary_times = benchmark_searches()
     print(sizes)
