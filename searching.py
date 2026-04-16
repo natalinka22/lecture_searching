@@ -107,7 +107,7 @@ def benchmark_searches():
     plt.tight_layout()
     plt.savefig("task4_search_benchmark.png")
     plt.close()
-
+    # linearne rozostupy, vysledky zodpovedaju teoretickej asymptotickej zlozitosti
     return input_sizes, linear_times, binary_times
 
 
@@ -134,6 +134,9 @@ def pattern_search(sequence, pattern):
 
         if match:
             positions.add(start)
+        else:
+            start += 1
+            continue
 
         start += 1
 
