@@ -49,12 +49,34 @@ def linear_search(sequence, target):
     return result
 
 
+def binary_search(sequence, target):
+    left = 0
+    right = len(sequence) - 1
+
+    while left <= right:
+        middle = left + (right - left) // 2
+
+        if sequence[middle] == target:
+            return middle
+
+        if sequence[middle] < target:
+            left = middle + 1
+        else:
+            right = middle - 1
+
+    return None
+
+
+
 def main():
     sequential_data = read_data("sequential.json", "unordered_numbers")
+    ordered_data = read_data("sequential.json", "ordered_numbers")
     searched_number = 5
+    ordered_searched_number = 14
 
     print(sequential_data)
     print(linear_search(sequential_data, searched_number))
+    print(binary_search(ordered_data, ordered_searched_number))
 
 
 if __name__ == "__main__":
